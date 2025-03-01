@@ -116,7 +116,7 @@ const DashboardPage = () => {
       {/* Header */}
       <div className="text-center py-20">
         <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white">
-          Event Discovery
+          Smart Event Discovery
         </h1>
         <p className="text-gray-500 dark:text-gray-400 text-sm lg:text-md mt-2">
           Explore events happening near you.

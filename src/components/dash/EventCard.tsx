@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
+import { useUser } from "@clerk/nextjs";
 
 interface Event {
   id: number;
@@ -25,15 +26,46 @@ interface EventCardProps {
 }
 
 const EventCard: React.FC<EventCardProps> = ({ event }) => {
+  const { user, isLoaded } = useUser();
   const [isGoing, setIsGoing] = useState(
-    event.rsvp.some((user) => user.userId === "currentUserId")
+    event.rsvp.some((rsvp) => rsvp.userId === user?.id)
   );
   const [localRsvpCount, setLocalRsvpCount] = useState(event.rsvpCount);
+  const [isUpdating, setIsUpdating] = useState(false);
 
-  const handleRsvp = () => {
-    setIsGoing(!isGoing);
-    setLocalRsvpCount((prev) => (isGoing ? prev - 1 : prev + 1));
+  const handleRsvp = async () => {
+    if (!user) {
+      return;
+    }
+
+    setIsUpdating(true);
+    try {
+      const response = await fetch("/api/user/updateGoingStatus", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          eventId: event.id,
+          userId: user.id,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setIsGoing(!isGoing);
+        setLocalRsvpCount(data.rsvpCount);
+      } else {
+        throw new Error(data.error);
+      }
+    } catch (error) {
+      console.error("Error updating RSVP:", error);
+    } finally {
+      setIsUpdating(false);
+    }
   };
+
   return (
     <div className="flex flex-col items-center">
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden max-w-md w-full border border-gray-200 dark:border-gray-700">
@@ -103,13 +135,16 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
             <div className="flex items-center ml-4">
               <button
                 onClick={handleRsvp}
-                className={`flex items-center px-4 py-2 rounded-full border transition-colors duration-200 ${
+                disabled={isUpdating || !isLoaded}
+                className={`flex items-center px-4 py-2 rounded-full border transition-colors duration-200 w-28s ${
                   isGoing
                     ? "bg-green-700 dark:bg-green-600 text-white border-green-700 dark:border-green-600"
                     : "bg-white dark:bg-gray-800 text-green-500 dark:text-green-400 border-green-500 dark:border-green-400 hover:bg-green-50 dark:hover:bg-green-900/30"
-                }`}
+                } ${isUpdating ? "opacity-50 cursor-not-allowed" : ""}`}
               >
-                <span className="mx-2">Going</span>
+                <span className="mx-2">
+                  {isUpdating ? "Updating" : "Going"}
+                </span>
                 <span className="text-sm font-medium ml-2">
                   {localRsvpCount}
                 </span>
