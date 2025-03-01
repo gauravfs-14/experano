@@ -1,5 +1,5 @@
-import { ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 export default function CTA() {
   return (
@@ -11,9 +11,11 @@ export default function CTA() {
         Join our community of event enthusiasts and start discovering
         personalized experiences that match your interests and schedule.
       </p>
-      <Button className="border border-black dark:border-white py-2 px-8 rounded-lg font-semibold bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-100 transition flex items-center gap-2">
-        Join Experano <ArrowRight size={18} />
-      </Button>
+      <Link href={"/events"}>
+        <Button className="border border-black dark:border-white py-2 px-8 rounded-lg font-semibold bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-100 transition flex items-center gap-2">
+          View Events{" "}
+        </Button>
+      </Link>
     </section>
   );
 }

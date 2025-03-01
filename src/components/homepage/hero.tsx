@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 export default function Hero() {
   return (
@@ -12,9 +13,11 @@ export default function Hero() {
         local meetups to major events, find what matches your interests with
         smart recommendations.
       </p>
-      <Button className="border border-black dark:border-white py-2 px-8 rounded-lg font-semibold bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-100 transition flex items-center gap-2 text-lg">
-        Explore Events <ArrowRight size={20} />
-      </Button>
+      <Link href={"/smart-discover"}>
+        <Button className="border border-black dark:border-white py-2 px-8 rounded-lg font-semibold bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-100 transition flex items-center gap-2 text-lg">
+          Explore Events <ArrowRight size={20} />
+        </Button>
+      </Link>
     </section>
   );
 }

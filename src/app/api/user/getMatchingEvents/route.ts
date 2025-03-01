@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
 import LlamaStackClient from "llama-stack-client";
 import { currentUser } from "@clerk/nextjs/server";
@@ -115,7 +114,7 @@ export async function GET() {
         role: "user",
         content: `User Profile: ${userProfile}\n\nHere are some filtered events:\n${JSON.stringify(
           relevantEvents
-        )}\n\nReturn only the most relevant event IDs as a JSON array.`,
+        )}\n\nReturn only the most relevant event IDs as an array.`,
       },
     ];
 

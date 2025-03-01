@@ -90,7 +90,7 @@ export default function ChatbotOnboarding() {
               key={msg.id}
               className={`p-2 my-2 rounded-lg max-w-xs break-words ${
                 msg.sender === "bot"
-                  ? "bg-gray-200 text-left"
+                  ? "bg-gray-200 dark:bg-gray-800 dark:text-white text-left"
                   : "bg-blue-500 text-white ml-auto text-right"
               }`}
             >
@@ -105,16 +105,23 @@ export default function ChatbotOnboarding() {
           )}
         </ScrollArea>
         <div className="flex items-center gap-2">
-          <Input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your answer..."
-            className="flex-1"
-            disabled={loading || isEndOfTurn}
-          />
-          <Button onClick={handleSendMessage} disabled={loading || isEndOfTurn}>
-            Send
-          </Button>
+          {messages.length < 10 && (
+            <>
+              <Input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Type your answer..."
+                className="flex-1"
+                disabled={loading || isEndOfTurn}
+              />
+              <Button
+                onClick={handleSendMessage}
+                disabled={loading || isEndOfTurn}
+              >
+                Send
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </>
