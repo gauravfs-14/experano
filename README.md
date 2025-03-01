@@ -1,12 +1,12 @@
 # Experano
 
-Experano: Personalized experiences whenever you go. It is a personalized recommendation web app, which recommends events and activities near the user based on the user preferences.
+Experano: Personalized experiences whenever you go. It is a personalized recommendation web app, which recommends events and activities based on user preferences. Join thousands of event-goers discovering personalized experiences. From local meetups to major events, find what matches your interests with smart recommendations.
 
 ## Features
 
-- Personalized event and activity recommendations
-- Location-based suggestions
-- User preference learning
+- Powerful Event Discovery: Find events that match your interests using our comprehensive search and filtering system. Filter by location, category, and date to discover the perfect events for you.
+- Simple RSVP Management: Keep track of events you're interested in with our RSVP system. See who else is going and manage your event attendance all in one place.
+- Event Organization: Create and manage your own events through our platform. Add details, track attendance, and reach potential attendees easily.
 
 ## Getting Started
 
