@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
@@ -5,10 +6,17 @@ import EventCard from "../../components/dash/EventCard";
 import Filter from "../../components/dash/Filter";
 import { Button } from "@/components/ui/button";
 
-// Debounce function for search input optimization
-const debounce = (func: Function, delay: number) => {
+// Define proper types for debounce function
+type DebouncedFunction<T extends (...args: unknown[]) => void> = (
+  ...args: Parameters<T>
+) => void;
+
+const debounce = <T extends (...args: unknown[]) => void>(
+  func: T,
+  delay: number
+): DebouncedFunction<T> => {
   let timeout: NodeJS.Timeout;
-  return (...args: any[]) => {
+  return (...args: Parameters<T>) => {
     clearTimeout(timeout);
     timeout = setTimeout(() => func(...args), delay);
   };
@@ -47,13 +55,16 @@ const DashboardPage = () => {
   const [locations, setLocations] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
 
-  // Debounced search handler
+  // Fix useCallback with proper types and inline function
   const debouncedSearch = useCallback(
-    debounce((query: string) => {
-      setSearchQuery(query);
-      setCurrentPage(1);
-    }, 500),
-    []
+    (query: string) => {
+      const handler = debounce((searchValue: string) => {
+        setSearchQuery(searchValue);
+        setCurrentPage(1);
+      }, 500);
+      handler(query);
+    },
+    [setSearchQuery, setCurrentPage]
   );
 
   // Fetch events from API

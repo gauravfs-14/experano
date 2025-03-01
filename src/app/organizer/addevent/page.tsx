@@ -3,13 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
-import {
-  Calendar as CalendarIcon,
-  Clock,
-  X,
-  Upload,
-  MapPin,
-} from "lucide-react";
+import { Calendar as CalendarIcon, X, Upload, MapPin } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 import { Button } from "@/components/ui/button";

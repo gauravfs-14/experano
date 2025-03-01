@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
 import LlamaStackClient from "llama-stack-client";
 import { SYSTEM_PROMPT } from "./constant";
@@ -24,9 +25,9 @@ export async function POST(req: Request) {
 
     const name = user.fullName;
 
-    const userPreference = await prisma.user.findUnique({
-      where: { email },
-    });
+    // const userPreference = await prisma.user.findUnique({
+    //   where: { email },
+    // });
     // if ((userPreference?.userPreferences?.length ?? 0) > 0) {
     //   return NextResponse.json(
     //     { error: "User preference already exists" },

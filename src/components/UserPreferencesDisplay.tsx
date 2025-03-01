@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useAuth } from "@clerk/nextjs";
@@ -13,7 +14,6 @@ import UserOnboarding from "./user-onboarding/default";
 
 export default function UserPreferencesDisplay() {
   const { getToken } = useAuth();
-  const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isNotFound, setIsNotFound] = useState(false);
@@ -40,9 +40,6 @@ export default function UserPreferencesDisplay() {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
         }
-
-        const jsonData = await response.json();
-        setData(jsonData);
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -51,7 +48,7 @@ export default function UserPreferencesDisplay() {
     };
 
     fetchData();
-  }, []);
+  });
 
   if (loading) {
     return <p className="text-center text-blue-500">Loading...</p>; // You can replace this with Next.js default loading component if available

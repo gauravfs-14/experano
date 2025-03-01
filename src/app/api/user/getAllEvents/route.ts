@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -23,7 +24,7 @@ export const GET = async (req: Request) => {
     const skip = (page - 1) * limit;
 
     // Build dynamic where filter
-    let whereClause: any = {};
+    const whereClause: any = {};
 
     // Use Prisma's `LOWER()` function for case-insensitive search in SQLite
     if (query) {

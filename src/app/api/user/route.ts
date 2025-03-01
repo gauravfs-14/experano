@@ -1,8 +1,8 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import fs from "fs/promises";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     // Read events from JSON file
     const filePath = "./src/app/api/user/synthetic_event_data_1000.json"; // Update the correct file path

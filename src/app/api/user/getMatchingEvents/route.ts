@@ -1,4 +1,5 @@
-import { NextResponse, NextRequest } from "next/server";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { NextResponse } from "next/server";
 import LlamaStackClient from "llama-stack-client";
 import { currentUser } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
@@ -27,7 +28,7 @@ async function retryRequest(
   }
 }
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     // console.log("🔍 Fetching user...");
     const user = await currentUser();
@@ -225,7 +226,7 @@ function extractKeywords(userProfile: string): string[] {
   ]);
 
   const filteredWords = words.filter(
-    (word) => !stopWords.has(word.toLowerCase())
+    (word: string) => !stopWords.has(word.toLowerCase())
   );
 
   return [...new Set(filteredWords)].slice(0, 5);

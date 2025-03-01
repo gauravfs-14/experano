@@ -28,9 +28,9 @@ export default function About() {
               Simple RSVP Management
             </AccordionTrigger>
             <AccordionContent>
-              Keep track of events you're interested in with our RSVP system.
-              See who else is going and manage your event attendance all in one
-              place.
+              Keep track of events you&apos;re interested in with our RSVP
+              system. See who else is going and manage your event attendance all
+              in one place.
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="create">
