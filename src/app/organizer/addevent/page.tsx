@@ -296,7 +296,7 @@ export default function CreateEventPage() {
   return (
     <>
       <Navbar />
-      <div className="container mx-auto py-10 px-4 bg-gray-50">
+      <div className="container mx-auto py-10 px-4 ">
         <Card className="max-w-4xl mx-auto shadow-lg border-0 p-0">
           <CardHeader className="bg-black p-4 text-white rounded-t-lg">
             <CardTitle className="text-3xl font-bold">
