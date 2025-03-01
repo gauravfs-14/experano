@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
 import LlamaStackClient from "llama-stack-client";
 import { currentUser } from "@clerk/nextjs/server";
