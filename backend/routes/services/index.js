@@ -1,8 +1,8 @@
 import express from "express";
-import { getPreferencesByUser } from "../controllers";
+import { getPreferencesByUser } from "../../controllers/index.js";
 
 const router = express.Router();
 
-router.get("/preferenceListByUser", getPreferencesByUser);
+router.post("/preferenceListByUser", getPreferencesByUser);
 
 export default router;
