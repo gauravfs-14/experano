@@ -5,7 +5,6 @@ import { currentUser } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 import { SYSTEM_PROMPT } from "./constant";
 import stringSimilarity from "string-similarity"; // Install: npm i string-similarity
-import { safeParse } from "fast-json-parse"; // Install: npm i fast-json-parse
 
 const client = new LlamaStackClient({
   baseURL: "https://llama-stack.together.ai",
