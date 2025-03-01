@@ -4,9 +4,11 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export const GET = async () => {
+export const dynamic = "force-dynamic";
+
+export async function GET() {
   try {
-    const user = await currentUser();
+    const user = await currentUser(); // Ensure it runs on the server
 
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -14,7 +16,7 @@ export const GET = async () => {
 
     const email = user.primaryEmailAddress?.emailAddress;
     if (!email) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: "Email not found" }, { status: 400 });
     }
 
     const userPreference = await prisma.user.findUnique({
@@ -28,11 +30,12 @@ export const GET = async () => {
       );
     }
 
-    return NextResponse.json(userPreference, { status: 200 });
+    return NextResponse.json(userPreference);
   } catch (error) {
+    console.error("API Error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
     );
   }
-};
+}
