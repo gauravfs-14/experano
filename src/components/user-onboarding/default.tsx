@@ -20,9 +20,10 @@ export default function ChatbotOnboarding() {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isEndOfTurn, setIsEndOfTurn] = useState(false);
 
   const handleSendMessage = async () => {
-    if (!input.trim() || loading) return;
+    if (!input.trim() || loading || isEndOfTurn) return;
 
     try {
       // Add user message
@@ -58,6 +59,11 @@ export default function ChatbotOnboarding() {
           sender: "bot",
         },
       ]);
+
+      // Check stop_reason
+      if (data.stop_reason === "end_of_turn") {
+        setIsEndOfTurn(true);
+      }
     } catch (error: any) {
       console.error("Chat error:", error);
       setMessages((prev) => [
@@ -103,9 +109,9 @@ export default function ChatbotOnboarding() {
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type your answer..."
             className="flex-1"
-            disabled={loading}
+            disabled={loading || isEndOfTurn}
           />
-          <Button onClick={handleSendMessage} disabled={loading}>
+          <Button onClick={handleSendMessage} disabled={loading || isEndOfTurn}>
             Send
           </Button>
         </div>

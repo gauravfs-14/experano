@@ -6,9 +6,7 @@ import { Button } from "./ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
 import UserOnboarding from "./user-onboarding/default";
@@ -79,9 +77,5 @@ export default function UserPreferencesDisplay() {
     );
   }
 
-  return (
-    <div className="p-4 bg-white shadow-md rounded-md">
-      <pre className="text-gray-700">{JSON.stringify(data, null, 2)}</pre>
-    </div>
-  );
+  return null;
 }

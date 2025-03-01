@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import LlamaStackClient from "llama-stack-client";
 import { SYSTEM_PROMPT } from "./constant";
+import { currentUser } from "@clerk/nextjs/server";
+import prisma from "@/lib/prisma";
 
 // Initialize Llama Stack Client
 const client = new LlamaStackClient({
@@ -10,6 +12,28 @@ const client = new LlamaStackClient({
 
 export async function POST(req: Request) {
   try {
+    const user = await currentUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const email = user.primaryEmailAddress?.emailAddress;
+    if (!email) {
+      return NextResponse.json({ error: "Email not found" }, { status: 400 });
+    }
+
+    const name = user.fullName;
+
+    const userPreference = await prisma.user.findUnique({
+      where: { email },
+    });
+    if (userPreference) {
+      return NextResponse.json(
+        { error: "User preference already exists" },
+        { status: 400 }
+      );
+    }
+
     const { conversation } = await req.json();
     console.log("Received conversation:", conversation);
 
@@ -24,7 +48,7 @@ export async function POST(req: Request) {
     const messages = [
       {
         role: "system",
-        content: SYSTEM_PROMPT,
+        content: SYSTEM_PROMPT + `The user's name is ${name ?? email}`,
       },
       ...formattedMessages,
     ];
@@ -40,6 +64,33 @@ export async function POST(req: Request) {
 
     if (!completion?.completion_message?.content) {
       throw new Error("No response from Llama Stack");
+    }
+
+    // Extract final user profile
+    const responseText =
+      typeof completion.completion_message.content === "string"
+        ? completion.completion_message.content.trim()
+        : "";
+
+    // Check if it's the final response (user profile summary)
+    let userProfile = "";
+    if (conversation.length >= 6) {
+      userProfile = responseText;
+      // Save user preference to database
+      try {
+        await prisma.user.upsert({
+          where: { email },
+          update: {
+            userPreferences: userProfile,
+          },
+          create: {
+            email,
+            userPreferences: userProfile,
+          },
+        });
+      } catch (error) {
+        console.error("Failed to save user preference:", error);
+      }
     }
 
     return NextResponse.json({
