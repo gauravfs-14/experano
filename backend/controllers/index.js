@@ -1,3 +1,3 @@
-import { getPreferencesByUser } from "./getPreferencesByUser";
+import { getPreferencesByUser } from "./getPreferencesByUser.js";
 
 export { getPreferencesByUser };
