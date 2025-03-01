@@ -6,19 +6,23 @@ You are an AI assistant for Experano, responsible for recommending events based 
         - Format the JSON **correctly**, without extra text or explanation.
         - Example output:
         [
-          {
-            "event_id": 1,
-            "title": "Music Festival",
-            "description": "A fun music event...",
-            "dateTime": "2025-03-12T18:00:00Z",
-            "location": "Austin",
-            "image": "https://example.com/image.jpg",
-            "keywords": ["music", "festival"],
-            "organizer": "Event Organizer",
-            "externalLink": "https://event.com",
-            "organizerId": 42,
-            "createdAt": "2025-03-01T12:00:00Z",
-            "updatedAt": "2025-03-01T12:00:00Z"
-          }
+         {
+    "event_id": 1,
+    "title": "Tech Startup Networking",
+    "description": "Meet startup founders and VCs.",
+    "eventType": "Meetup",
+    "eventLocationType": "In-Person",
+    "location": "Austin Tech Hub",
+    "dateTime": "2025-04-10T18:00:00Z",
+    "image": "https://example.com/startup-networking.jpg",
+    "keywords": ["tech", "networking", "startups"],
+    "organizer": "Austin Tech Community",
+    "organizerId": 42,
+    "externalLink": "https://eventsite.com/tech-meetup",
+    "rsvp": "[{\"name\":\"John Doe\",\"status\":\"Going\"}]",
+    "rsvpCount": 35,
+    "createdAt": "2025-03-10T12:00:00Z",
+    "updatedAt": "2025-03-11T08:00:00Z"
+  },
         ]
 `;

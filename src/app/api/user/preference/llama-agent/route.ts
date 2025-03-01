@@ -27,12 +27,12 @@ export async function POST(req: Request) {
     const userPreference = await prisma.user.findUnique({
       where: { email },
     });
-    if (userPreference) {
-      return NextResponse.json(
-        { error: "User preference already exists" },
-        { status: 400 }
-      );
-    }
+    // if ((userPreference?.userPreferences?.length ?? 0) > 0) {
+    //   return NextResponse.json(
+    //     { error: "User preference already exists" },
+    //     { status: 400 }
+    //   );
+    // }
 
     const { conversation } = await req.json();
     console.log("Received conversation:", conversation);
@@ -74,7 +74,7 @@ export async function POST(req: Request) {
 
     // Check if it's the final response (user profile summary)
     let userProfile = "";
-    if (conversation.length >= 6) {
+    if (conversation.length >= 10) {
       userProfile = responseText;
       // Save user preference to database
       try {

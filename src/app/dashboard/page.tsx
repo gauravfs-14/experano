@@ -29,29 +29,9 @@ const DashboardPage = () => {
       likesCount: 40,
       rsvp: [
         {
-          userId: "u1",
-          name: "John Doe",
-          avatar: "https://i.pravatar.cc/40?u=u1",
-        },
-        {
-          userId: "u2",
-          name: "Jane Smith",
-          avatar: "https://i.pravatar.cc/40?u=u2",
-        },
-        {
-          userId: "u3",
-          name: "Mike Johnson",
-          avatar: "https://i.pravatar.cc/40?u=u3",
-        },
-        {
-          userId: "u4",
-          name: "Sarah Wilson",
-          avatar: "https://i.pravatar.cc/40?u=u4",
-        },
-        {
           userId: "u5",
-          name: "Alex Brown",
-          avatar: "https://i.pravatar.cc/40?u=u5",
+          name: "",
+          avatar: "",
         },
       ],
     },
@@ -70,35 +50,15 @@ const DashboardPage = () => {
       rsvp: [
         {
           userId: "u6",
-          name: "Emma Davis",
-          avatar: "https://i.pravatar.cc/40?u=u6",
-        },
-        {
-          userId: "u7",
-          name: "Chris Taylor",
-          avatar: "https://i.pravatar.cc/40?u=u7",
-        },
-        {
-          userId: "u8",
-          name: "Pat Murphy",
-          avatar: "https://i.pravatar.cc/40?u=u8",
-        },
-        {
-          userId: "u9",
-          name: "Sam Lee",
-          avatar: "https://i.pravatar.cc/40?u=u9",
-        },
-        {
-          userId: "u10",
-          name: "Jordan Chen",
-          avatar: "https://i.pravatar.cc/40?u=u10",
+          name: "",
+          avatar: "",
         },
       ],
     },
   ];
 
   return (
-    <div className="min-h-screen md:h-screen flex flex-col bg-gray-50 dark:bg-gray-900 md:overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 md:overflow-hidden">
       {/* Header */}
       <div className="text-center py-6">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
@@ -110,23 +70,23 @@ const DashboardPage = () => {
       </div>
 
       {/* Three Column Layout that becomes rows on mobile */}
-      <div className="flex-1 px-4 pb-6 md:overflow-hidden">
-        <div className="h-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6">
+      <div className="flex-1 pb-6 md:overflow-hidden w-screen">
+        <div className=" max-w-7xl grid grid-cols-1 md:grid-cols-12 gap-6 z-10 ">
           {/* Filter Column */}
           <div
-            className="order-1 md:col-span-3 md:overflow-y-auto md:scroll-smooth md:h-auto"
+            className="order-1 md:col-span-3 md:overflow-y-auto md:scroll-smooth md:h-auto md:fixed md:my-auto md:left-10 xl:left-20"
             style={scrollbarHideStyles}
           >
             <Filter />
           </div>
 
           {/* Events Column */}
-          <div className="order-3 md:order-2 md:col-span-6 md:relative">
+          <div className="w-screen flex items-center justify-center pb-20">
             <div
-              className="md:absolute md:inset-0 md:overflow-y-auto md:scroll-smooth"
+              className="md:inset-0 md:flex md:justify-center"
               style={scrollbarHideStyles}
             >
-              <div className="space-y-6 pr-4">
+              <div className="space-y-6 pr-4 min-w-3xl">
                 {events.map((event, index) => (
                   <div
                     key={event.id}

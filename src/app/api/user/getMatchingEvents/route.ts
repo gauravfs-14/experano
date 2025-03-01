@@ -71,10 +71,14 @@ export async function GET(req: NextRequest) {
       image: event.image,
       keywords: Array.isArray(event.keywords)
         ? event.keywords
-        : [event.keywords],
-      organizer: event.organizer,
-      organizerId: event.organizerId,
+        : [event.keywords], // Ensure keywords is an array
+      eventType: event.eventType,
+      eventLocationType: event.eventLocationType,
+      organizer: event.organizer ?? "Unknown Organizer", // Handle null values
+      organizerId: event.organizerId ?? null, // Keep as null if missing
       externalLink: event.externalLink,
+      rsvp: event.rsvp ? JSON.stringify(event.rsvp) : "[]", // Convert JSON RSVP data to a string (default empty array)
+      rsvpCount: event.rsvpCount ?? 0, // Ensure rsvpCount has a default value
       createdAt: event.createdAt.toISOString(),
       updatedAt: event.updatedAt.toISOString(),
     }));
