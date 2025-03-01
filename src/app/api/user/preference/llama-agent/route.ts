@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import LlamaStackClient from "llama-stack-client";
+import { SYSTEM_PROMPT } from "./constant";
 
 // Initialize Llama Stack Client
 const client = new LlamaStackClient({
@@ -23,8 +24,7 @@ export async function POST(req: Request) {
     const messages = [
       {
         role: "system",
-        content:
-          "You are an onboarding assistant. Ask only one question at a time. Use previous responses to generate relevant follow-up questions. Stop after 5 questions.",
+        content: SYSTEM_PROMPT,
       },
       ...formattedMessages,
     ];
