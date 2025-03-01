@@ -12,25 +12,43 @@ const client = new LlamaStackClient({
   apiKey: process.env.TOGETHER_API,
 });
 
-// Utility function to retry AI requests
+// Utility function to retry AI requests and ensure valid JSON response
 async function retryRequest(
   fn: () => Promise<any>,
-  retries = 3,
+  retries = 5,
   delay = 1000
 ): Promise<any> {
   for (let i = 0; i < retries; i++) {
     try {
-      return await fn();
+      const response = await fn();
+
+      // Validate JSON response
+      let parsedResponse;
+      try {
+        parsedResponse = JSON.parse(response.completion_message.content.trim());
+        if (!Array.isArray(parsedResponse)) {
+          throw new Error("Invalid JSON format (not an array).");
+        }
+      } catch (parseError) {
+        console.warn(
+          `⚠️ AI response invalid (Attempt ${i + 1}/${retries}):`,
+          parseError
+        );
+        await new Promise((res) => setTimeout(res, delay));
+        continue; // Retry on failure
+      }
+
+      return parsedResponse; // Valid JSON found, return it
     } catch (error) {
       if (i === retries - 1) throw error;
       await new Promise((res) => setTimeout(res, delay));
     }
   }
+  throw new Error("AI response failed after maximum retries.");
 }
 
 export async function GET() {
   try {
-    // console.log("🔍 Fetching user...");
     const user = await currentUser();
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -55,11 +73,7 @@ export async function GET() {
     }
 
     const userProfile = userProfileData.userPreferences;
-    // console.log(`📝 User Profile: ${userProfile}`);
-
-    // Extract relevant keywords from user preferences
     const userKeywords = extractKeywords(userProfile);
-    // console.log(`🔑 Extracted User Keywords:`, userKeywords);
 
     if (!userKeywords.length) {
       return NextResponse.json(
@@ -68,34 +82,16 @@ export async function GET() {
       );
     }
 
-    // Fetch upcoming events
-    // console.log("📅 Fetching upcoming events...");
-    const MAX_EVENTS_TO_FETCH = 1000;
-
     const allEvents = await prisma.event.findMany({
       orderBy: { rsvpCount: "desc" },
-      take: MAX_EVENTS_TO_FETCH, // Fetch all events
+      take: 1000,
     });
 
-    // console.log(`✅ Total Events Fetched: ${allEvents.length}`);
-
-    // **Improved Event Filtering**
     const relevantEvents = allEvents.filter((event) => {
       if (!event.keywords) return false;
-
       const eventKeywords = normalizeEventKeywords(event.keywords);
-      const hasMatch = hasKeywordMatch(userKeywords, eventKeywords);
-
-      // console.log(`🆚 Matching "${event.title}":`, {
-      //   eventKeywords,
-      //   userKeywords,
-      //   hasMatch,
-      // });
-
-      return hasMatch;
+      return hasKeywordMatch(userKeywords, eventKeywords);
     });
-
-    // console.log(`🎯 Total Matched Events: ${relevantEvents.length}`);
 
     if (!relevantEvents.length) {
       return NextResponse.json(
@@ -104,11 +100,7 @@ export async function GET() {
       );
     }
 
-    // console.log(
-    //   `🚀 Sending ${relevantEvents.length} filtered events to Llama-Stack`
-    // );
-
-    // Prepare messages for Llama-Stack (send full event details)
+    // Prepare messages for AI model
     const messages: any[] = [
       { role: "system", content: SYSTEM_PROMPT },
       {
@@ -119,38 +111,16 @@ export async function GET() {
       },
     ];
 
-    // Send data to Llama-Stack with retry mechanism
-    const completion = await retryRequest(async () => {
-      return await client.inference.chatCompletion({
+    // Send request to Llama-Stack with retry for valid JSON
+    const filteredEventIds = await retryRequest(async () => {
+      const completion = await client.inference.chatCompletion({
         model_id: "meta-llama/Llama-3.2-3B-Instruct",
         messages,
       });
+      return completion;
     });
 
-    // console.log("🧠 Raw AI Response:", completion?.completion_message?.content);
-
-    let filteredEventIds: number[];
-    try {
-      // Validate and clean AI response
-      const rawResponse = completion.completion_message.content.trim();
-
-      if (!rawResponse.startsWith("[") || !rawResponse.endsWith("]")) {
-        console.error("⚠️ AI returned non-JSON data. Wrapping in array.");
-        filteredEventIds = safeParse(`[${rawResponse}]`).value || [];
-      } else {
-        filteredEventIds = JSON.parse(rawResponse);
-      }
-    } catch (error) {
-      console.error("❌ Error parsing Llama response:", error);
-      return NextResponse.json(
-        { error: "Invalid response format from AI. Ensure JSON formatting." },
-        { status: 500 }
-      );
-    }
-
-    // console.log(`🎯 Final Event IDs from AI:`, filteredEventIds);
-
-    // Fetch full event details using filtered event IDs
+    // Fetch events based on filtered IDs
     const finalEvents = await prisma.event.findMany({
       where: { id: { in: filteredEventIds } },
     });
