@@ -42,7 +42,7 @@ yarn-error.log*
 
 # prisma
 /prisma/migrations
-/prisma/dev.db
+# /prisma/dev.db
 /prisma/*.db-journal
 
 # clerk configuration (can include secrets)
