@@ -7,7 +7,7 @@ import Filter from "../../components/dash/Filter";
 const scrollbarHideStyles = {
   msOverflowStyle: "none" /* IE and Edge */,
   scrollbarWidth: "none" /* Firefox */,
-  "&::-webkit-scrollbar": {
+  "&::webkit-scrollbar": {
     display: "none" /* Chrome, Safari and Opera */,
   },
   scrollBehavior: "smooth",

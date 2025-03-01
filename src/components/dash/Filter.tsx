@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { IoLocationSharp } from "react-icons/io5";
-import { FaFilter } from "react-icons/fa";
+import { Filter as FilterIcon, MapPin } from "lucide-react";
 
 const Filter = () => {
   const [location, setLocation] = useState('');
@@ -16,7 +15,7 @@ const Filter = () => {
   return (
     <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
       <h2 className="text-xl font-semibold mb-4 dark:text-white flex items-center">
-        <FaFilter className="mr-2" /> Filters
+        <FilterIcon className="mr-2" /> Filters
       </h2>
       
       {/* Date Filter */}
@@ -48,7 +47,7 @@ const Filter = () => {
             onClick={handleGetLocation}
             className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-500"
           >
-            <IoLocationSharp size={20} />
+            <MapPin size={20} />
           </button>
         </div>
       </div>
@@ -101,7 +100,7 @@ const Filter = () => {
 
       {/* Apply Filter Button */}
       <button className="w-full bg-green-600  hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition duration-200 flex items-center justify-center">
-        <FaFilter className="mr-2" />
+        <FilterIcon className="mr-2" />
         Apply Filters
       </button>
     </div>
