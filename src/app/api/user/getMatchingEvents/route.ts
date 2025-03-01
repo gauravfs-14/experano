@@ -92,11 +92,22 @@ export async function GET() {
       return hasKeywordMatch(userKeywords, eventKeywords);
     });
 
+    // If no relevant events found, return random events
     if (!relevantEvents.length) {
-      return NextResponse.json(
-        { error: "No matching events found" },
-        { status: 404 }
-      );
+      console.log("No matching events found, returning random events");
+      const randomEvents = await prisma.event.findMany({
+        take: 10,
+        orderBy: {
+          // Random ordering in Prisma
+          id: "asc",
+        },
+        skip: Math.floor(Math.random() * Math.max(allEvents.length - 10, 0)),
+      });
+
+      return NextResponse.json({
+        recommended_events: randomEvents,
+        is_random: true,
+      });
     }
 
     // Prepare messages for AI model
@@ -119,12 +130,28 @@ export async function GET() {
       return completion;
     });
 
-    // Fetch events based on filtered IDs
+    // Fetch events based on filtered IDs, fallback to random if none found
     const finalEvents = await prisma.event.findMany({
       where: { id: { in: filteredEventIds } },
     });
 
-    return NextResponse.json({ recommended_events: finalEvents });
+    if (!finalEvents.length) {
+      const randomEvents = await prisma.event.findMany({
+        take: 10,
+        orderBy: { id: "asc" },
+        skip: Math.floor(Math.random() * Math.max(allEvents.length - 10, 0)),
+      });
+
+      return NextResponse.json({
+        recommended_events: randomEvents,
+        is_random: true,
+      });
+    }
+
+    return NextResponse.json({
+      recommended_events: finalEvents,
+      is_random: false,
+    });
   } catch (error: any) {
     console.error("❌ Error fetching event recommendations:", error);
     return NextResponse.json(

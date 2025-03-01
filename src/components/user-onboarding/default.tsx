@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { DialogTitle } from "../ui/dialog";
+import { DialogTitle, DialogTrigger } from "../ui/dialog";
 import { ScrollArea } from "../ui/scroll-area";
 
 interface Message {
@@ -85,42 +85,49 @@ export default function ChatbotOnboarding() {
       <DialogTitle>Chatbot Onboarding</DialogTitle>
       <div className="p-4 space-y-4">
         <ScrollArea className="h-80 overflow-y-auto border-b pb-4">
-          {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`p-2 my-2 rounded-lg max-w-xs break-words ${
-                msg.sender === "bot"
-                  ? "bg-gray-200 dark:bg-gray-800 dark:text-white text-left"
-                  : "bg-blue-500 text-white ml-auto text-right"
-              }`}
-            >
-              {msg.text}
-              {msg.sender === "bot" && loading && (
-                <span className="ml-2">...</span>
-              )}
-            </div>
-          ))}
+          {messages &&
+            messages.map((msg) => (
+              <div
+                key={msg.id}
+                className={`p-2 my-2 rounded-lg max-w-xs break-words ${
+                  msg.sender === "bot"
+                    ? "bg-gray-200 dark:bg-gray-800 dark:text-white text-left"
+                    : "bg-blue-500 text-white ml-auto text-right"
+                }`}
+              >
+                {msg.text}
+                {msg.sender === "bot" && loading && (
+                  <span className="ml-2">...</span>
+                )}
+              </div>
+            ))}
           {loading && (
             <div className="text-center text-gray-500">AI is thinking...</div>
           )}
         </ScrollArea>
         <div className="flex items-center gap-2">
-          {messages.length < 10 && (
+          {messages.length < 10 ? (
             <>
-              <Input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Type your answer..."
-                className="flex-1"
-                disabled={loading || isEndOfTurn}
-              />
-              <Button
-                onClick={handleSendMessage}
-                disabled={loading || isEndOfTurn}
-              >
-                Send
-              </Button>
+              <form className="flex items-center gap-4 w-full">
+                <Input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Type your answer..."
+                  className="flex-1"
+                  disabled={loading || isEndOfTurn}
+                />
+                <Button
+                  onClick={handleSendMessage}
+                  disabled={loading || isEndOfTurn}
+                >
+                  Send
+                </Button>
+              </form>
             </>
+          ) : (
+            <DialogTrigger>
+              <Button asChild>Close</Button>
+            </DialogTrigger>
           )}
         </div>
       </div>

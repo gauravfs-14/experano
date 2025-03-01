@@ -65,12 +65,12 @@ const DashboardPage = () => {
   }, []);
 
   // Extract unique locations, categories, and dates
-  const locations = Array.from(new Set(events.map((event) => event.location)));
+  const locations = Array.from(new Set(events?.map((event) => event.location)));
   const categories = Array.from(
-    new Set(events.map((event) => event.eventType))
+    new Set(events?.map((event) => event.eventType))
   );
   const dates = Array.from(
-    new Set(events.map((event) => event.dateTime.split("T")[0]))
+    new Set(events?.map((event) => event.dateTime.split("T")[0]))
   );
 
   // Handle filtering
@@ -156,7 +156,7 @@ const DashboardPage = () => {
 
             {/* Events List */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {filteredEvents.length > 0 ? (
+              {filteredEvents && filteredEvents.length > 0 ? (
                 filteredEvents.map((event) => (
                   <div
                     key={event.id}
