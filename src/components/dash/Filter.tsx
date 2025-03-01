@@ -1,108 +1,146 @@
-import React, { useState } from 'react';
-import { Filter as FilterIcon, MapPin } from "lucide-react";
+import React from "react";
 
-const Filter = () => {
-  const [location, setLocation] = useState('');
-
-  const handleGetLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setLocation(`${position.coords.latitude}, ${position.coords.longitude}`);
-      });
-    }
+interface FilterProps {
+  locations: string[];
+  categories: string[];
+  dates: string[];
+  selectedFilters: {
+    location: string;
+    category: string;
+    date: string;
   };
+  setSelectedFilters: React.Dispatch<
+    React.SetStateAction<{
+      location: string;
+      category: string;
+      date: string;
+    }>
+  >;
+}
 
+const Filter: React.FC<FilterProps> = ({
+  locations,
+  categories,
+  dates,
+  selectedFilters,
+  setSelectedFilters,
+}) => {
   return (
-    <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
-      <h2 className="text-xl font-semibold mb-4 dark:text-white flex items-center">
-        <FilterIcon className="mr-2" /> Filters
+    <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
+      <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">
+        Filter Events
       </h2>
-      
-      {/* Date Filter */}
-      <div className="mb-4">
-        <h3 className="text-sm font-medium mb-2 dark:text-gray-300">Date</h3>
-        <select className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-          <option>Any Date</option>
-          <option>Today</option>
-          <option>Tomorrow</option>
-          <option>This Weekend</option>
-          <option>This Week</option>
-          <option>This Month</option>
-          <option>Custom Range</option>
-        </select>
-      </div>
 
       {/* Location Filter */}
-      <div className="mb-4">
-        <h3 className="text-sm font-medium mb-2 dark:text-gray-300">Location</h3>
-        <div className="relative">
-          <input 
-            type="text" 
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            placeholder="Enter location"
-            className="w-full p-2 pr-10 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-          />
-          <button 
-            onClick={handleGetLocation}
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-500"
+      <label className="block mb-2 text-gray-700 dark:text-gray-300">
+        Location
+      </label>
+      <div className="relative">
+        <select
+          className="w-full p-2 border rounded-md dark:bg-gray-900 dark:text-white appearance-none pr-8"
+          value={selectedFilters.location}
+          onChange={(e) =>
+            setSelectedFilters((prev) => ({
+              ...prev,
+              location: e.target.value,
+            }))
+          }
+        >
+          <option value="">All Locations</option>
+          {locations.map((location) => (
+            <option key={location} value={location}>
+              {location}
+            </option>
+          ))}
+        </select>
+        <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+          <svg
+            className="w-4 h-4 text-gray-700 dark:text-gray-300"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
           >
-            <MapPin size={20} />
-          </button>
+            <path
+              fillRule="evenodd"
+              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+              clipRule="evenodd"
+            />
+          </svg>
         </div>
       </div>
 
       {/* Category Filter */}
-      <div className="mb-4">
-        <h3 className="text-sm font-medium mb-2 dark:text-gray-300">Category</h3>
-        <select className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-          <option>All Categories</option>
-          <option>Conference</option>
-          <option>Music Festival</option>
-          <option>Workshop</option>
-          <option>Networking</option>
-          <option>Sports</option>
-          <option>Art & Culture</option>
+      <label className="block mt-4 mb-2 text-gray-700 dark:text-gray-300">
+        Category
+      </label>
+      <div className="relative">
+        <select
+          className="w-full p-2 border rounded-md dark:bg-gray-900 dark:text-white appearance-none pr-8"
+          value={selectedFilters.category}
+          onChange={(e) =>
+            setSelectedFilters((prev) => ({
+              ...prev,
+              category: e.target.value,
+            }))
+          }
+        >
+          <option value="">All Categories</option>
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
         </select>
-      </div>
-
-      {/* Interest Description */}
-      <div className="mb-4">
-        <h3 className="text-sm font-medium mb-2 dark:text-gray-300">Interests</h3>
-        <textarea 
-          placeholder="Describe your interests (e.g., tech, music, art)"
-          className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white h-24"
-        />
-      </div>
-
-      {/* Additional Options */}
-      <div className="mb-6">
-        <h3 className="text-sm font-medium mb-2 dark:text-gray-300">Additional Options</h3>
-        <div className="space-y-2">
-          <label className="flex items-center dark:text-gray-300">
-            <input type="checkbox" className="mr-2" />
-            Free Events Only
-          </label>
-          <label className="flex items-center dark:text-gray-300">
-            <input type="checkbox" className="mr-2" />
-            Online Events
-          </label>
-          <label className="flex items-center dark:text-gray-300">
-            <input type="checkbox" className="mr-2" />
-            Family Friendly
-          </label>
-          <label className="flex items-center dark:text-gray-300">
-            <input type="checkbox" className="mr-2" />
-            Accessible Events
-          </label>
+        <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+          <svg
+            className="w-4 h-4 text-gray-700 dark:text-gray-300"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+              clipRule="evenodd"
+            />
+          </svg>
         </div>
       </div>
 
-      {/* Apply Filter Button */}
-      <button className="w-full bg-green-600  hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition duration-200 flex items-center justify-center">
-        <FilterIcon className="mr-2" />
-        Apply Filters
-      </button>
+      {/* Date Filter */}
+      <label className="block mt-4 mb-2 text-gray-700 dark:text-gray-300">
+        Date
+      </label>
+      <div className="relative">
+        <select
+          className="w-full p-2 border rounded-md dark:bg-gray-900 dark:text-white appearance-none pr-8"
+          value={selectedFilters.date}
+          onChange={(e) =>
+            setSelectedFilters((prev) => ({ ...prev, date: e.target.value }))
+          }
+        >
+          <option value="">All Dates</option>
+          {dates.map((date) => (
+            <option key={date} value={date}>
+              {date}
+            </option>
+          ))}
+        </select>
+        <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+          <svg
+            className="w-4 h-4 text-gray-700 dark:text-gray-300"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </div>
+      </div>
     </div>
   );
 };
